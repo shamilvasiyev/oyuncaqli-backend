@@ -10,8 +10,6 @@ const { v4 } = require("uuid");
 
 require("dotenv").config();
 
-// Routes
-
 const authRouter = require("./routes/auth");
 const productRouter = require("./routes/product");
 const blogRouter = require("./routes/blog");
