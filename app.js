@@ -12,7 +12,6 @@ require("dotenv").config();
 
 // Routes
 
-// const feedRouter = require("./routes/feed");
 const authRouter = require("./routes/auth");
 const productRouter = require("./routes/product");
 const blogRouter = require("./routes/blog");
@@ -50,11 +49,19 @@ app.use(
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-// app.use(cors({ origin: ["https://oyuncaqli.az", "http://localhost:3001/"] }));
-app.use(cors());
+const allowedOrigins = [
+  process.env.ALLOWED_DOMAIN_ONE,
+  process.env.ALLOWED_DOMAIN_TWO,
+  process.env.ALLOWED_DOMAIN_THREE,
+];
+
+app.use(cors({ origin: allowedOrigins }));
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH,DELETE"
@@ -91,10 +98,8 @@ mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("Connected!");
-    app.listen(3000);
+    app.listen(process.env.PORT);
   })
   .catch((err) => {
     console.log(err);
   });
-
-// array("images", 12));
